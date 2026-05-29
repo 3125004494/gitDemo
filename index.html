@@ -22,7 +22,7 @@
 <body>
 	<div class="container">
 		<h1>简单计时器</h1>
-		<div class="display" id="display">00:00:00</div>
+		<div class="display" id="display">00:00.000</div>
 		<div class="settings">
 			<label><input type="radio" name="mode" value="stopwatch" checked> 计时</label>
 			<label><input type="radio" name="mode" value="countdown"> 倒计时</label>
@@ -59,11 +59,12 @@
 
 		function formatTime(ms){
 			if(ms < 0) ms = 0;
-			const totalSec = Math.floor(ms/1000);
-			const h = Math.floor(totalSec / 3600);
-			const m = Math.floor((totalSec % 3600) / 60);
+			const totalMs = Math.floor(ms);
+			const totalSec = Math.floor(totalMs / 1000);
+			const m = Math.floor(totalSec / 60);
 			const s = totalSec % 60;
-			return [h,m,s].map(n => String(n).padStart(2,'0')).join(':');
+			const msPart = totalMs % 1000;
+			return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0') + '.' + String(msPart).padStart(3,'0');
 		}
 
 		function updateDisplay(){
@@ -96,7 +97,7 @@
 				}
 				startTime = Date.now();
 			}
-			timerId = setInterval(updateDisplay, 200);
+			timerId = setInterval(updateDisplay, 50);
 			startBtn.disabled = true;
 			pauseBtn.disabled = false;
 			resetBtn.disabled = false;
@@ -126,7 +127,7 @@
 			elapsed = 0;
 			remaining = 0;
 			initialDuration = 0;
-			display.textContent = '00:00:00';
+			display.textContent = '00:00.000';
 			startBtn.disabled = false;
 			pauseBtn.disabled = true;
 			resetBtn.disabled = false;
